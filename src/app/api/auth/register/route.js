@@ -17,7 +17,7 @@ export async function POST(req) {
   if (foundUser) {
     return NextResponse.json({
       message: "El usuario ya existe",
-    });
+    }, { status: 400 });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,5 +30,5 @@ export async function POST(req) {
     },
   });
 
-  return NextResponse.json({ message: "Registrando" }, { status: 200 });
+  return NextResponse.json({ message: "Usuario registrado" }, { status: 200 });
 }

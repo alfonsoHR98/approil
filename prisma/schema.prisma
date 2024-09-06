@@ -64,9 +64,9 @@ model Warehouse {
 
   SaleDetail SaleDetail[]
 
-  inventory inventory[]
+  inventory Inventory[]
 
-  waste waste[]
+  waste Waste[]
 }
 
 model Product {
@@ -85,9 +85,9 @@ model Product {
 
   SaleDetail SaleDetail[]
 
-  inventory inventory[]
+  inventory Inventory[]
 
-  waste waste[]
+  waste Waste[]
 }
 
 model SaleUnit {
@@ -159,7 +159,7 @@ model SaleDetail {
   updatedAt DateTime @updatedAt
 }
 
-model inventory {
+model Inventory {
   id        String   @id @default(uuid())
   product   Product @relation(fields: [product_id], references: [id])
   product_id String
@@ -171,7 +171,7 @@ model inventory {
   updatedAt DateTime @updatedAt
 }
 
-model waste {
+model Waste {
   id        String   @id @default(uuid())
   product   Product @relation(fields: [product_id], references: [id])
   product_id String
