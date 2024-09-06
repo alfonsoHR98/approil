@@ -9,5 +9,13 @@ export async function GET(req) {
 export async function POST(req) {
   const data = await req.json();
   const { name, value, unit } = data;
-  return NextResponse.json({ message: "Registrando" }, { status: 200 });
+  const res = await db.saleUnit.create({
+    data: {
+      name,
+      value,
+      unit,
+    },
+  });
+  return NextResponse.json(res, { status: 200 });
 }
+

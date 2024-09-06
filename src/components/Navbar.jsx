@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   Navbar,
   NavbarBrand,
@@ -108,7 +109,7 @@ const pages = [
 ];
 
 function NavBar() {
-  const { data: session, status } = useSession();
+  const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState(null);
 
   const handleDropdownToggle = (name) => {
@@ -116,7 +117,7 @@ function NavBar() {
   };
 
   return (
-    <Navbar className={!session && "hidden"} maxWidth="2xl">
+    <Navbar maxWidth="2xl">
       <NavbarContent justify="start">
         <NavbarBrand>
           <Image src="./aproillogo.webp" alt="Aproil" height={40} />
@@ -184,7 +185,10 @@ function NavBar() {
             size="md"
             color="danger"
             isIconOnly
-            onClick={() => signOut()}
+            onClick={() => {
+              signOut();
+              router.push("/auth/login");
+            }}
           >
             <VscSignOut size={24} />
           </Button>
