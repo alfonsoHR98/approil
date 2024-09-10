@@ -15,6 +15,24 @@ export const ClientProvider = ({ children }) => {
   const [clients, setClients] = useState([]);
   const [error, setError] = useState(null);
 
+  const loadClients = async () => {
+    try {
+      const res = await axios.get("/client");
+      setClients(res.data);
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newClient(data) {
+    try {
+      await axios.post("/client", data);
+      loadClients();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -29,6 +47,8 @@ export const ClientProvider = ({ children }) => {
       value={{
         clients,
         error,
+        loadClients,
+        newClient,
       }}
     >
       {children}

@@ -66,7 +66,6 @@ model Warehouse {
   SaleDetail   SaleDetail[]
   inventory    Inventory[]
   waste        Waste[]
-  Sale         Sale[]
 }
 
 model Product {
@@ -141,8 +140,6 @@ model Sale {
   id        String   @id @default(uuid())
   client    Client? @relation(fields: [client_id], references: [id])
   client_id String?
-  warehouse Warehouse? @relation(fields: [warehouse_id], references: [id])
-  warehouse_id String?
   bill      String
   account   String
   date      DateTime

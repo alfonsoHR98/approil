@@ -40,14 +40,14 @@ const pages = [
     name: "Ventas",
     links: [
       {
-        name: "Nueva venta",
-        href: "/new-sale",
-        icon: <GiReceiveMoney />,
+        name: "Ventas realizadas",
+        href: "/sale",
+        icon: <TbTableColumn />,
       },
       {
-        name: "Historial de ventas",
-        href: "/sales-history",
-        icon: <TbTableColumn />,
+        name: "Nueva venta",
+        href: "/sale/new-sale",
+        icon: <GiReceiveMoney />,
       },
     ],
   },
@@ -55,14 +55,14 @@ const pages = [
     name: "Compras",
     links: [
       {
-        name: "Nueva compra",
-        href: "/new-purchase",
-        icon: <GiPayMoney />,
+        name: "Compras realizadas",
+        href: "/purchase",
+        icon: <TbTableColumn />,
       },
       {
-        name: "Historial de compras",
-        href: "/purchases-history",
-        icon: <TbTableColumn />,
+        name: "Nueva compra",
+        href: "/purchase/new-purchase",
+        icon: <GiPayMoney />,
       },
     ],
   },
@@ -81,7 +81,7 @@ const pages = [
       },
       {
         name: "Clientes",
-        href: "/clients",
+        href: "/",
         icon: <TbUserPlus />,
       },
       {
