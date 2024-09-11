@@ -76,12 +76,12 @@ const pages = [
       },
       {
         name: "Productos",
-        href: "/products",
+        href: "/product",
         icon: <AiOutlineProduct />,
       },
       {
         name: "Clientes",
-        href: "/",
+        href: "/client",
         icon: <TbUserPlus />,
       },
       {
@@ -91,7 +91,7 @@ const pages = [
       },
       {
         name: "Proveedores",
-        href: "/suppliers",
+        href: "/supplier",
         icon: <TbUserDollar />,
       },
     ],

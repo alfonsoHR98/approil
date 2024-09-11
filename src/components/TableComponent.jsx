@@ -50,7 +50,7 @@ const actions = (item, deleteFunction) => {
 function TableComponent({ columns, data, removeItem }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
-  const rowsPerPage = 7;
+  const rowsPerPage = 5;
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -96,7 +96,7 @@ function TableComponent({ columns, data, removeItem }) {
       </div>
       <Table
         aria-label="Table component general"
-        className="mt-4 max-h-[500px] h-full"
+        className="mt-2 max-h-[500px] overflow-y-auto"
         isHeaderSticky
         bottomContent={
           <div className="flex w-full justify-center">

@@ -33,6 +33,15 @@ export const ClientProvider = ({ children }) => {
     }
   }
 
+  async function removeClient(id) {
+    try {
+      await axios.delete(`/client/${id}`);
+      loadClients();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -49,6 +58,7 @@ export const ClientProvider = ({ children }) => {
         error,
         loadClients,
         newClient,
+        removeClient,
       }}
     >
       {children}

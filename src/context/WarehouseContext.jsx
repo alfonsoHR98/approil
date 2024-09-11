@@ -15,6 +15,33 @@ export const WarehouseProvider = ({ children }) => {
   const [warehouses, setWarehouses] = useState([]);
   const [error, setError] = useState(null);
 
+  const loadWarehouses = async () => {
+    try {
+      const res = await axios.get("/warehouse");
+      setWarehouses(res.data);
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newWarehouse(data) {
+    try {
+      await axios.post("/warehouse", data);
+      loadWarehouses();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function removeWarehouse(id) {
+    try {
+      await axios.delete(`/warehouse/${id}`);
+      loadWarehouses();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -29,6 +56,9 @@ export const WarehouseProvider = ({ children }) => {
       value={{
         warehouses,
         error,
+        loadWarehouses,
+        newWarehouse,
+        removeWarehouse,
       }}
     >
       {children}

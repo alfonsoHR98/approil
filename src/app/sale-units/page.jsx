@@ -45,7 +45,7 @@ function SaleUnit() {
 
   return (
     <PageComponent tittle="Unidades de venta">
-      <div className="flex justify-between items-center gap-4 mt-4">
+      <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {saleUnitError ? (
           <div className="bg-red-500 text-white p-2 rounded">
             {saleUnitError}

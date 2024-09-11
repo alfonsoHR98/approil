@@ -15,6 +15,33 @@ export const SupplierProvider = ({ children }) => {
   const [suppliers, setSuppliers] = useState([]);
   const [error, setError] = useState(null);
 
+  const loadSuppliers = async () => {
+    try {
+      const res = await axios.get("/supplier");
+      setSuppliers(res.data);
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newSupplier(data) {
+    try {
+      await axios.post("/supplier", data);
+      loadSuppliers();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function removeSupplier(id) {
+    try {
+      await axios.delete(`/supplier/${id}`);
+      loadSuppliers();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -29,6 +56,9 @@ export const SupplierProvider = ({ children }) => {
       value={{
         suppliers,
         error,
+        loadSuppliers,
+        newSupplier,
+        removeSupplier,
       }}
     >
       {children}

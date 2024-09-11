@@ -15,6 +15,33 @@ export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
 
+  const loadProducts = async () => {
+    try {
+      const res = await axios.get("/product");
+      setProducts(res.data);
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newProduct(data) {
+    try {
+      await axios.post("/product", data);
+      loadProducts();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function removeProduct(id) {
+    try {
+      await axios.delete(`/product/${id}`);
+      loadProducts();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -29,6 +56,9 @@ export const ProductProvider = ({ children }) => {
       value={{
         products,
         error,
+        loadProducts,
+        newProduct,
+        removeProduct,
       }}
     >
       {children}
