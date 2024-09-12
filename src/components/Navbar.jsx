@@ -120,7 +120,7 @@ function NavBar() {
     <Navbar maxWidth="2xl">
       <NavbarContent justify="start">
         <NavbarBrand>
-          <Image src="./aproillogo.webp" alt="Aproil" height={40} />
+          <h1 className="text-red-700 font-extrabold text-lg">APROIL</h1>
         </NavbarBrand>
       </NavbarContent>
 
@@ -154,7 +154,7 @@ function NavBar() {
               </DropdownTrigger>
               <DropdownMenu>
                 {page.links.map((link) => (
-                  <DropdownItem key={link.name}>
+                  <DropdownItem key={link.name} textValue={link.name}>
                     <Link
                       href={link.href}
                       color="foreground"

@@ -142,7 +142,6 @@ model Sale {
   client_id String?
   bill      String
   account   String
-  date      DateTime
   state     Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
