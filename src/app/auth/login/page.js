@@ -61,7 +61,7 @@ function Login() {
           )}
 
           <Input
-            label="Usuario"
+            label="Correo electrónico"
             variant="bordered"
             color="default"
             value={watch("email")}

@@ -13,6 +13,7 @@ import { useProduct } from "@context/ProductContext";
 import { useWarehouse } from "@context/WarehouseContext";
 import { useRouter } from "next/navigation";
 import { useSale } from "@context/SaleContext";
+import { useInventory } from "@context/InventoryContext";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -21,6 +22,7 @@ function NewSale() {
   const { products, loadProducts } = useProduct();
   const { warehouses, loadWarehouses } = useWarehouse();
   const { newSale, newSaleDetail } = useSale();
+  const { subtractInventory } = useInventory();
   const router = useRouter();
   const {
     register,
@@ -69,6 +71,11 @@ function NewSale() {
         quantity: parseFloat(item.quantity),
         price: parseFloat(item.unitPrice),
         discount: parseFloat(item.discount),
+      });
+      await subtractInventory({
+        product_id: item.product_id,
+        warehouse_id: item.warehouse_id,
+        quantity: parseFloat(item.quantity),
       });
     });
 

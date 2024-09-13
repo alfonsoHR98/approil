@@ -13,6 +13,7 @@ import { useWarehouse } from "@context/WarehouseContext";
 import { useProduct } from "@context/ProductContext";
 import { useSupplier } from "@context/SupplierContext";
 import { useBatche } from "@context/BatcheContext";
+import {useInventory} from "@context/InventoryContext"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -21,6 +22,7 @@ function NewPurchase() {
   const { warehouses, loadWarehouses } = useWarehouse();
   const { suppliers, loadSuppliers } = useSupplier();
   const { newBatche, newBatcheDetail } = useBatche();
+  const { addInventory } = useInventory();
   const router = useRouter();
   const {
     register,
@@ -64,6 +66,11 @@ function NewPurchase() {
         product_id: product.product_id,
         quantity: parseFloat(product.quantity),
         price: parseFloat(product.price),
+      });
+      await addInventory({
+        product_id: product.product_id,
+        warehouse_id: data.warehouse_id,
+        quantity: parseFloat(product.quantity),
       });
     });
 

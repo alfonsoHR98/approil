@@ -154,7 +154,7 @@ function Product() {
               label: "Código",
             },
             {
-              key: "unit_id",
+              key: "unit.name",
               label: "Unidad",
             },
             {

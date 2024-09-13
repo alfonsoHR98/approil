@@ -25,6 +25,7 @@ import {
   TbTableColumn,
   TbDatabase,
   TbTrash,
+  TbArrowsLeftRight,
 } from "react-icons/tb";
 import { AiOutlineProduct } from "react-icons/ai";
 import { GiPayMoney, GiReceiveMoney } from "react-icons/gi";
@@ -66,6 +67,26 @@ const pages = [
     ],
   },
   {
+    name: "Control",
+    links: [
+      {
+        name: "Inventario",
+        href: "/inventory",
+        icon: <TbDatabase />,
+      },
+      {
+        name: "Desperdicios",
+        href: "/waste",
+        icon: <TbTrash />,
+      },
+      {
+        name: "Trasferencias",
+        href: "/transfer",
+        icon: <TbArrowsLeftRight />,
+      }
+    ],
+  },
+  {
     name: "Registros",
     links: [
       {
@@ -94,16 +115,6 @@ const pages = [
         icon: <TbUserDollar />,
       },
     ],
-  },
-  {
-    name: "Inventario",
-    href: "/inventory",
-    icon: <TbDatabase />,
-  },
-  {
-    name: "Desperdicios",
-    href: "/waste",
-    icon: <TbTrash />,
   },
 ];
 
@@ -135,40 +146,29 @@ function NavBar() {
               onOpenChange={() => handleDropdownToggle(page.name)}
             >
               <DropdownTrigger>
-                <Button
-                  endContent={
-                    openDropdown === page.name ? (
-                      <FaChevronUp />
-                    ) : (
-                      <FaChevronDown />
-                    )
-                  }
-                  variant="light"
-                  color="foreground"
-                  size="lg"
-                >
-                  {page.icon}
-                  {page.name}
-                </Button>
+                <div className="flex items-center gap-2 hover:cursor-pointer">
+                  <span>{page.name}</span>
+                  {openDropdown === page.name ? (
+                    <FaChevronUp />
+                  ) : (
+                    <FaChevronDown />
+                  )}
+                </div>
               </DropdownTrigger>
               <DropdownMenu>
                 {page.links.map((link) => (
-                  <DropdownItem key={link.name} textValue={link.name}>
-                    <Link
-                      href={link.href}
-                      color="foreground"
-                      className="flex gap-2"
-                    >
-                      {link.icon}
-                      {link.name}
-                    </Link>
-                  </DropdownItem>
+                  <DropdownItem
+                    key={link.name}
+                    title={link.name}
+                    href={link.href}
+                    startContent={link.icon}
+                  />
                 ))}
               </DropdownMenu>
             </Dropdown>
           ) : (
             <NavbarItem key={page.name}>
-              <Link href={page.href} color="foreground" className="flex gap-2">
+              <Link href={page.href} color="foreground" className="flex">
                 {page.icon}
                 {page.name}
               </Link>
