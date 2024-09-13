@@ -7,7 +7,6 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Image,
   Button,
   DropdownItem,
   DropdownTrigger,

@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import db from "@lib/db";
 
 export async function GET(req) {
-  const products = await db.product.findMany();
+  const products = await db.product.findMany({
+    include: {
+      unit: true,
+    },
+  });
   return NextResponse.json(products, { status: 200 });
 }
 

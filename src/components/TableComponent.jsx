@@ -6,7 +6,6 @@ import {
   TableColumn,
   TableRow,
   TableCell,
-  getKeyValue,
   Tooltip,
   Input,
   Button,
@@ -15,6 +14,7 @@ import {
 import React, { useState, useMemo } from "react";
 import { TbEye, TbEdit, TbTrash, TbDownload, TbSearch } from "react-icons/tb";
 import { toast } from "react-toastify";
+
 const actions = (item, deleteFunction) => {
   const handleDelete = () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este elemento?")) {
@@ -25,17 +25,17 @@ const actions = (item, deleteFunction) => {
 
   return (
     <div className="relative flex items-center gap-2">
-      <Tooltip content="Details">
+      <Tooltip content="Detalles">
         <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
           <TbEye />
         </span>
       </Tooltip>
-      <Tooltip content="Edit user">
+      <Tooltip content="Editar">
         <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
           <TbEdit />
         </span>
       </Tooltip>
-      <Tooltip color="danger" content="Delete user">
+      <Tooltip color="danger" content="Eliminar">
         <span
           className="text-lg text-danger cursor-pointer active:opacity-50"
           onClick={handleDelete}
@@ -46,11 +46,20 @@ const actions = (item, deleteFunction) => {
     </div>
   );
 };
+const getNestedValue = (obj, key) => {
+  return key.split(".").reduce((o, i) => (o ? o[i] : null), obj);
+};
 
-function TableComponent({ columns, data, removeItem }) {
+function TableComponent({
+  columns,
+  data,
+  removeItem,
+  rowNumber,
+  calculateTotal,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = rowNumber || 5;
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -58,7 +67,7 @@ function TableComponent({ columns, data, removeItem }) {
 
   const filteredData = data.filter((item) =>
     columns.some((column) =>
-      (getKeyValue(item, column.key) ?? "")
+      (getNestedValue(item, column.key) ?? "")
         .toString()
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
@@ -122,9 +131,20 @@ function TableComponent({ columns, data, removeItem }) {
             <TableRow key={item.key}>
               {(columnKey) => (
                 <TableCell>
-                  {columnKey === "actions"
-                    ? actions(item, removeItem)
-                    : (getKeyValue(item, columnKey) ?? "").toString()}
+                  {(() => {
+                    switch (columnKey) {
+                      case "actions":
+                        return actions(item, removeItem);
+                      case "total":
+                        return (
+                          calculateTotal ? calculateTotal(item) : ""
+                        ).toString();
+                      default:
+                        return (
+                          getNestedValue(item, columnKey) ?? ""
+                        ).toString();
+                    }
+                  })()}
                 </TableCell>
               )}
             </TableRow>

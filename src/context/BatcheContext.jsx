@@ -15,6 +15,42 @@ export const BatcheProvider = ({ children }) => {
   const [batches, setBatches] = useState([]);
   const [error, setError] = useState(null);
 
+  const loadBatches = async () => {
+    try {
+      const res = await axios.get("/batche");
+      setBatches(res.data);
+    } catch (err) {
+      setError(error.response?.data?.message);
+    }
+  };
+
+  async function newBatche(data) {
+    try {
+      const res = await axios.post("/batche", data);
+      loadBatches();
+      return res.data;
+    } catch (err) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function removeBatche(id) {
+    try {
+      await axios.delete(`/batche/${id}`);
+      loadBatches();
+    } catch (err) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newBatcheDetail(data) {
+    try {
+      await axios.post("/batcheDetail", data);
+    } catch (err) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -29,6 +65,10 @@ export const BatcheProvider = ({ children }) => {
       value={{
         batches,
         error,
+        loadBatches,
+        newBatche,
+        removeBatche,
+        newBatcheDetail,
       }}
     >
       {children}

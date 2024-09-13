@@ -66,6 +66,8 @@ model Warehouse {
   SaleDetail   SaleDetail[]
   inventory    Inventory[]
   waste        Waste[]
+
+  Sale Sale[]
 }
 
 model Product {
@@ -110,12 +112,12 @@ model Batche {
   warehouse        Warehouse  @relation(name: "Warehouse", fields: [warehouse_id], references: [id])
   warehouse_id     String
   supplierType     SupplierType
-  date             DateTime
+  bill             String?
   state            Boolean    @default(true)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
-  BatcheDetail     BatcheDetail[]
+  BatcheDetail     BatcheDetail[] @relation // Relación sin eliminación en cascada
 }
 
 enum SupplierType {
@@ -123,70 +125,78 @@ enum SupplierType {
   WAREHOUSE
 }
 
+enum SaleType {
+  CLIENT
+  WAREHOUSE
+}
+
 model BatcheDetail {
-  id      String   @id @default(uuid())
-  batche  Batche   @relation(fields: [batche_id], references: [id])
+  id        String   @id @default(uuid())
+  batche    Batche   @relation(fields: [batche_id], references: [id], onDelete: Cascade) // Relación con eliminación en cascada
   batche_id String
-  product Product @relation(fields: [product_id], references: [id])
+  product   Product  @relation(fields: [product_id], references: [id])
   product_id String
-  quantity Float
-  price    Float
-  state    Boolean @default(true)
+  quantity  Float
+  price     Float
+  state     Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Sale {
   id        String   @id @default(uuid())
-  client    Client? @relation(fields: [client_id], references: [id])
+  client    Client?  @relation(fields: [client_id], references: [id])
   client_id String?
+  warehouse Warehouse? @relation(fields: [warehouse_id], references: [id])
+  warehouse_id String?
+  saleType  SaleType
   bill      String
   account   String
   state     Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  SaleDetail SaleDetail[]
+  SaleDetail SaleDetail[] @relation // Relación sin eliminación en cascada
 }
 
 model SaleDetail {
   id        String   @id @default(uuid())
-  sale      Sale     @relation(fields: [sale_id], references: [id])
+  sale      Sale     @relation(fields: [sale_id], references: [id], onDelete: Cascade) // Relación con eliminación en cascada
   sale_id   String
-  product   Product @relation(fields: [product_id], references: [id])
+  product   Product  @relation(fields: [product_id], references: [id])
   product_id String
   warehouse Warehouse @relation(fields: [warehouse_id], references: [id])
   warehouse_id String
-  quantity Float
-  price    Float
-  discount Float  
-  state    Boolean @default(true)
+  quantity  Float
+  price     Float
+  discount  Float  
+  state     Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Inventory {
   id        String   @id @default(uuid())
-  product   Product @relation(fields: [product_id], references: [id])
+  product   Product  @relation(fields: [product_id], references: [id])
   product_id String
   warehouse Warehouse @relation(fields: [warehouse_id], references: [id])
   warehouse_id String
-  quantity Float
-  state    Boolean @default(true)
+  quantity  Float
+  state     Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Waste {
   id        String   @id @default(uuid())
-  product   Product @relation(fields: [product_id], references: [id])
+  product   Product  @relation(fields: [product_id], references: [id])
   product_id String
   warehouse Warehouse @relation(fields: [warehouse_id], references: [id])
   warehouse_id String
-  quantity Float
-  reason  String
-  date    DateTime
-  state    Boolean @default(true)
+  quantity  Float
+  reason    String
+  date      DateTime
+  state     Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

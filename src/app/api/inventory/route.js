@@ -13,6 +13,18 @@ export async function POST(req) {
     warehouse_id,
     quantity,
   } = data;
+
+  const foundRegister = await db.inventory.findUnique({
+    where: {
+      product_id,
+      warehouse_id,
+    },
+  })
+  if (foundRegister) {
+    return NextResponse.json({
+      message: "El registro ya existe",
+    }, { status: 400 });
+  }
   const res = await db.inventory.create({
     data: {
       product_id,

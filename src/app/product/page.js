@@ -157,6 +157,10 @@ function Product() {
               key: "unit_id",
               label: "Unidad",
             },
+            {
+              key: "actions",
+              label: "Acciones",
+            },
           ]}
           data={products}
           removeItem={removeProduct}

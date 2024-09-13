@@ -15,6 +15,42 @@ export const SaleProvider = ({ children }) => {
   const [sales, setSales] = useState([]);
   const [error, setError] = useState(null);
 
+  const loadSales = async () => {
+    try {
+      const res = await axios.get("/sale");
+      setSales(res.data);
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newSale(data) {
+    try {
+      const res = await axios.post("/sale", data);
+      loadSales();
+      return res.data;
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function removeSale(id) {
+    try {
+      await axios.delete(`/sale/${id}`);
+      loadSales();
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
+  async function newSaleDetail(data) {
+    try {
+      await axios.post("/saleDetail", data);
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -29,6 +65,10 @@ export const SaleProvider = ({ children }) => {
       value={{
         sales,
         error,
+        loadSales,
+        newSale,
+        removeSale,
+        newSaleDetail,
       }}
     >
       {children}

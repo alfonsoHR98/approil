@@ -11,13 +11,17 @@ import {
 import { useClient } from "@context/ClientContext";
 import { useProduct } from "@context/ProductContext";
 import { useWarehouse } from "@context/WarehouseContext";
+import { useRouter } from "next/navigation";
+import { useSale } from "@context/SaleContext";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { toast } from "react-toastify";
 
 function NewSale() {
-  const [saleResult, setSaleResult] = React.useState(null);
   const { clients, loadClients } = useClient();
   const { products, loadProducts } = useProduct();
   const { warehouses, loadWarehouses } = useWarehouse();
+  const { newSale, newSaleDetail } = useSale();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -48,8 +52,28 @@ function NewSale() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    setSaleResult(data);
+    const res = await newSale({
+      client_id: data.client_id,
+      bill: data.bill,
+      account: data.account,
+      saleType: "CLIENT",
+    });
+
+    const sale_id = res.id;
+
+    data.products.map(async (item) => {
+      await newSaleDetail({
+        sale_id,
+        product_id: item.product_id,
+        warehouse_id: item.warehouse_id,
+        quantity: parseFloat(item.quantity),
+        price: parseFloat(item.unitPrice),
+        discount: parseFloat(item.discount),
+      });
+    });
+
+    toast.success("Venta registrada correctamente");
+    router.push("/sale");
   });
 
   React.useEffect(() => {
@@ -119,7 +143,7 @@ function NewSale() {
         {fields.map((item, index) => (
           <div
             key={item.id}
-            className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 border p-2 rounded-md border-gray-300"
+            className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 border p-2 rounded-md border-gray-300 shadow-md"
           >
             <Controller
               name={`products.${index}.product_id`}
@@ -142,7 +166,13 @@ function NewSale() {
                 >
                   {(item) => (
                     <AutocompleteItem key={item.id} textValue={item.name}>
-                      {item.name}
+                      <div>
+                        <p className="text-sm font-semibold">{item.name}</p>
+                        <span className="text-xs flex justify-between gap-2">
+                          <p className=" text-gray-500">{item.code}</p>
+                          {item.unit.name}
+                        </span>
+                      </div>
                     </AutocompleteItem>
                   )}
                 </Autocomplete>
@@ -183,6 +213,10 @@ function NewSale() {
               isRequired
               {...register(`products.${index}.quantity`, {
                 required: "Este campo es requerido",
+                pattern: {
+                  value: /^[0-9]+(\.[0-9]{1,4})?$/,
+                  message: "Formato incorrecto",
+                },
               })}
               errorMessage={errors.products?.[index]?.quantity?.message}
               isInvalid={errors.products?.[index]?.quantity ? true : false}
@@ -195,6 +229,10 @@ function NewSale() {
               isRequired
               {...register(`products.${index}.unitPrice`, {
                 required: "Este campo es requerido",
+                pattern: {
+                  value: /^[0-9]+(\.[0-9]{1,4})?$/,
+                  message: "Formato incorrecto",
+                },
               })}
               errorMessage={errors.products?.[index]?.unitPrice?.message}
               isInvalid={errors.products?.[index]?.unitPrice ? true : false}
@@ -207,6 +245,10 @@ function NewSale() {
               isRequired
               {...register(`products.${index}.discount`, {
                 required: "Este campo es requerido",
+                pattern: {
+                  value: /^[0-9]+(\.[0-9]{1,4})?$/,
+                  message: "Formato incorrecto",
+                },
               })}
               errorMessage={errors.products?.[index]?.discount?.message}
               isInvalid={errors.products?.[index]?.discount ? true : false}
@@ -222,6 +264,13 @@ function NewSale() {
         ))}
         <div className="flex justify-end gap-4 w-full mt-4">
           <Button
+            color="danger"
+            variant="shadow"
+            onClick={() => router.push("/sale")}
+          >
+            Cancelar venta
+          </Button>
+          <Button
             color="primary"
             variant="shadow"
             onClick={() =>
@@ -235,11 +284,6 @@ function NewSale() {
             }
           >
             Agregar producto
-          </Button>
-        </div>
-        <div className="flex justify-end gap-4 w-full mt-4">
-          <Button color="danger" variant="shadow" onClick={() => reset()}>
-            Cancelar venta
           </Button>
           <Button color="success" variant="shadow" type="submit">
             Registrar venta
