@@ -39,7 +39,8 @@ export const BatcheProvider = ({ children }) => {
       await axios.delete(`/batche/${id}`);
       loadBatches();
     } catch (err) {
-      setError(error.response?.data?.message);
+      console.log(err);
+      //setError(error.response?.data?.message);
     }
   }
 

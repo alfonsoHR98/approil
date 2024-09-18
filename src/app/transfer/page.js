@@ -3,6 +3,8 @@ import React from "react";
 import PageComponent from "@components/PageComponent";
 import { useInventory } from "@context/InventoryContext";
 import { useWarehouse } from "@context/WarehouseContext";
+import { useSale } from "@context/SaleContext";
+import { useBatche } from "@context/BatcheContext";
 import {
   Input,
   Button,
@@ -13,8 +15,11 @@ import {
 import { useForm, Controller } from "react-hook-form";
 
 function Transfer() {
-  const { inventories, loadInventories } = useInventory();
+  const { inventories, loadInventories, addInventory, subtractInventory } =
+    useInventory();
   const { warehouses, loadWarehouses } = useWarehouse();
+  const { newSale, newSaleDetail } = useSale();
+  const { newBatche, newBatcheDetail } = useBatche();
   const [filteredProducts, setFilteredProducts] = React.useState([]);
   const {
     register,
@@ -39,7 +44,7 @@ function Transfer() {
 
   const supWarehouse = watch("sup_warehouse");
   const selectedProduct = watch("product");
-  
+
   React.useEffect(() => {
     if (supWarehouse) {
       const products = inventories
@@ -54,13 +59,62 @@ function Transfer() {
   const getAvailableQuantity = () => {
     const inventoryItem = inventories.find(
       (item) =>
-        item.product.id === selectedProduct && item.warehouse.id === supWarehouse
+        item.product.id === selectedProduct &&
+        item.warehouse.id === supWarehouse
     );
     return inventoryItem ? inventoryItem.quantity : 0;
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    const inventoryItem = inventories.find(
+      (item) =>
+        item.product.id === data.product &&
+        item.warehouse.id === data.sup_warehouse
+    );
+
+    if (inventoryItem) {
+      const sale = await newSale({
+        warehouse_id: data.des_warehouse,
+        saleType: "WAREHOUSE",
+        bill: "TRANSFERENCIA",
+        account: "APROIL",
+      });
+
+      const saleDetail = await newSaleDetail({
+        sale_id: sale.id,
+        product_id: data.product,
+        warehouse_id: data.sup_warehouse,
+        quantity: parseFloat(data.quantity),
+        price: parseFloat(inventoryItem?.price),
+        discount: 0,
+      });
+
+      const batche = await newBatche({
+        sup_warehouse_id: data.sup_warehouse,
+        warehouse_id: data.des_warehouse,
+        supplierType: "WAREHOUSE",
+        bill: "TRANSFERENCIA",
+      });
+
+      const batcheDetail = await newBatcheDetail({
+        batche_id: batche.id,
+        product_id: data.product,
+        quantity: parseFloat(data.quantity),
+        price: parseFloat(inventoryItem?.price),
+      });
+
+      await subtractInventory({
+        product_id: data.product,
+        warehouse_id: data.sup_warehouse,
+        quantity: parseFloat(data.quantity),
+      });
+
+      await addInventory({
+        product_id: data.product,
+        warehouse_id: data.des_warehouse,
+        quantity: parseFloat(data.quantity),
+      });
+    }
   });
 
   return (
@@ -112,8 +166,11 @@ function Transfer() {
                 {(item) => (
                   <AutocompleteItem key={item.id} textValue={item.name}>
                     <div>
-                      <h2>{item.name}</h2>
-                      <span>{item.code}</span>
+                      <h2 className="font-semibold">{item.name}</h2>
+                      <label className="text-xs text-neutral-600">
+                        <span>{item.code}</span>
+                        <span>{item?.unit?.name}</span>
+                      </label>
                     </div>
                   </AutocompleteItem>
                 )}

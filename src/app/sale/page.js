@@ -1,15 +1,15 @@
-"use client"
-import React from 'react'
-import PageComponent from '@components/PageComponent'
-import TableComponent from '@components/TableComponent'
-import { useSale } from '@context/SaleContext'
+"use client";
+import React from "react";
+import PageComponent from "@components/PageComponent";
+import TableComponent from "@components/TableComponent";
+import { useSale } from "@context/SaleContext";
 
 function Sale() {
   const { sales, loadSales, removeSale } = useSale();
 
   React.useEffect(() => {
-    loadSales()
-  }, [])
+    loadSales();
+  }, []);
 
   return (
     <PageComponent tittle="Ventas">
@@ -28,6 +28,10 @@ function Sale() {
             label: "Cuenta contable",
           },
           {
+            key: "saleType",
+            label: "Tipo de venta",
+          },
+          {
             key: "actions",
             label: "Acciones",
           },
@@ -35,9 +39,10 @@ function Sale() {
         data={sales}
         rowNumber={10}
         removeItem={removeSale}
+        route="sale"
       />
     </PageComponent>
   );
 }
 
-export default Sale
+export default Sale;

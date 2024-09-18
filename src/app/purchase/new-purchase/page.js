@@ -236,9 +236,9 @@ function NewPurchase() {
           <Button
             color="danger"
             variant="shadow"
-            onClick={() => router.push("/pourchase")}
+            onClick={() => router.push("/purchase")}
           >
-            Cancelar venta
+            Cancelar compra
           </Button>
           <Button
             color="primary"
@@ -254,7 +254,7 @@ function NewPurchase() {
             Agregar producto
           </Button>
           <Button color="success" variant="shadow" type="submit">
-            Registrar venta
+            Registrar compra
           </Button>
         </div>
       </form>

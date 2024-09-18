@@ -51,6 +51,7 @@ function Purchase() {
         rowNumber={10}
         removeItem={removeBatche}
         calculateTotal={calculateTotal}
+        route="purchase"
       />
     </PageComponent>
   );

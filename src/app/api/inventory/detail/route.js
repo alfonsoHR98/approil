@@ -44,16 +44,8 @@ export async function GET() {
           product: item.product, // Información del producto
           warehouse: item.warehouse, // Información del almacén
           quantity: item.quantity, // Cantidad registrada en el inventario
-          price: averagePrice.toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          }), // Precio promedio (0 si no hay detalles)
-          totalValue: (
-            item.quantity * averagePrice
-          ).toLocaleString("es-MX", {
-            style: "currency",
-            currency: "MXN",
-          }), // Valor total del
+          price: averagePrice, // Precio promedio (0 si no hay detalles)
+          totalValue: item.quantity * averagePrice, // Valor total del
         };
       })
     );

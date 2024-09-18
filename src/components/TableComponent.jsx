@@ -10,12 +10,13 @@ import {
   Input,
   Button,
   Pagination,
+  Link,
 } from "@nextui-org/react";
 import React, { useState, useMemo } from "react";
 import { TbEye, TbEdit, TbTrash, TbDownload, TbSearch } from "react-icons/tb";
 import { toast } from "react-toastify";
 
-const actions = (item, deleteFunction) => {
+const actions = (item, deleteFunction, route) => {
   const handleDelete = () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este elemento?")) {
       deleteFunction(item.id);
@@ -24,24 +25,34 @@ const actions = (item, deleteFunction) => {
   };
 
   return (
-    <div className="relative flex items-center gap-2">
+    <div className="">
       <Tooltip content="Detalles">
-        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+        <Button
+          as={Link}
+          href={`/${route}/${item.id}`}
+          isIconOnly
+          size="md"
+          variant="light"
+          color="default"
+        >
           <TbEye />
-        </span>
+        </Button>
       </Tooltip>
       <Tooltip content="Editar">
-        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+        <Button isIconOnly size="md" variant="light" color="default">
           <TbEdit />
-        </span>
+        </Button>
       </Tooltip>
       <Tooltip color="danger" content="Eliminar">
-        <span
-          className="text-lg text-danger cursor-pointer active:opacity-50"
+        <Button
+          isIconOnly
+          size="md"
+          variant="light"
+          color="danger"
           onClick={handleDelete}
         >
           <TbTrash />
-        </span>
+        </Button>
       </Tooltip>
     </div>
   );
@@ -56,6 +67,7 @@ function TableComponent({
   removeItem,
   rowNumber,
   calculateTotal,
+  route,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
@@ -134,7 +146,7 @@ function TableComponent({
                   {(() => {
                     switch (columnKey) {
                       case "actions":
-                        return actions(item, removeItem);
+                        return actions(item, removeItem, route);
                       case "total":
                         return (
                           calculateTotal ? calculateTotal(item) : ""

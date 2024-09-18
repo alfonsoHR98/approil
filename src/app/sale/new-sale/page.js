@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PageComponent from "@components/PageComponent";
 import {
   Input,
@@ -22,7 +22,7 @@ function NewSale() {
   const { products, loadProducts } = useProduct();
   const { warehouses, loadWarehouses } = useWarehouse();
   const { newSale, newSaleDetail } = useSale();
-  const { subtractInventory } = useInventory();
+  const { subtractInventory, inventories, loadInventories } = useInventory();
   const router = useRouter();
   const {
     register,
@@ -30,6 +30,7 @@ function NewSale() {
     watch,
     reset,
     control,
+    setValue, // Obtener setValue del hook useForm
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -52,6 +53,8 @@ function NewSale() {
     control,
     name: "products",
   });
+
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const onSubmit = handleSubmit(async (data) => {
     const res = await newSale({
@@ -83,14 +86,32 @@ function NewSale() {
     router.push("/sale");
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadClients();
     loadProducts();
     loadWarehouses();
+    loadInventories();
   }, []);
 
+  const handleWarehouseChange = (warehouseId, index) => {
+    const productsInWarehouse = inventories
+      .filter((item) => item.warehouse.id === warehouseId)
+      .map((item) => item.product);
+    setFilteredProducts(productsInWarehouse);
+    setValue(`products.${index}.product_id`, ""); // Reset product selection
+  };
+
+  const getStock = (productId, warehouseId) => {
+    const inventoryItem = inventories.find(
+      (inventory) =>
+        inventory.product.id === productId &&
+        inventory.warehouse.id === warehouseId
+    );
+    return inventoryItem ? inventoryItem.quantity : 0;
+  };
+
   return (
-    <PageComponent tittle="Nueva venta">
+    <PageComponent title="Nueva venta">
       <form onSubmit={onSubmit}>
         <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           <Controller
@@ -153,39 +174,6 @@ function NewSale() {
             className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 border p-2 rounded-md border-gray-300 shadow-md"
           >
             <Controller
-              name={`products.${index}.product_id`}
-              control={control}
-              rules={{ required: "El producto es requerido" }}
-              render={({ field, fieldState }) => (
-                <Autocomplete
-                  label="Producto"
-                  placeholder="Selecciona un producto"
-                  variant="bordered"
-                  isRequired
-                  size="sm"
-                  defaultItems={products}
-                  selectedKey={field.value}
-                  onSelectionChange={(key) => field.onChange(key)}
-                  errorMessage={errors.products?.[index]?.product_id?.message}
-                  isInvalid={
-                    errors.products?.[index]?.product_id ? true : false
-                  }
-                >
-                  {(item) => (
-                    <AutocompleteItem key={item.id} textValue={item.name}>
-                      <div>
-                        <p className="text-sm font-semibold">{item.name}</p>
-                        <span className="text-xs flex justify-between gap-2">
-                          <p className=" text-gray-500">{item.code}</p>
-                          {item.unit.name}
-                        </span>
-                      </div>
-                    </AutocompleteItem>
-                  )}
-                </Autocomplete>
-              )}
-            />
-            <Controller
               name={`products.${index}.warehouse_id`}
               control={control}
               rules={{ required: "El almacén es requerido" }}
@@ -198,7 +186,10 @@ function NewSale() {
                   size="sm"
                   defaultItems={warehouses}
                   selectedKey={field.value}
-                  onSelectionChange={(key) => field.onChange(key)}
+                  onSelectionChange={(key) => {
+                    field.onChange(key);
+                    handleWarehouseChange(key, index);
+                  }}
                   errorMessage={errors.products?.[index]?.warehouse_id?.message}
                   isInvalid={
                     errors.products?.[index]?.warehouse_id ? true : false
@@ -207,6 +198,40 @@ function NewSale() {
                   {(item) => (
                     <AutocompleteItem key={item.id} textValue={item.name}>
                       {item.name}
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
+              )}
+            />
+            <Controller
+              name={`products.${index}.product_id`}
+              control={control}
+              rules={{ required: "El producto es requerido" }}
+              render={({ field, fieldState }) => (
+                <Autocomplete
+                  label="Producto"
+                  placeholder="Selecciona un producto"
+                  variant="bordered"
+                  isRequired
+                  size="sm"
+                  defaultItems={filteredProducts}
+                  selectedKey={field.value}
+                  onSelectionChange={(key) => field.onChange(key)}
+                  errorMessage={errors.products?.[index]?.product_id?.message}
+                  isInvalid={
+                    errors.products?.[index]?.product_id ? true : false
+                  }
+                  disabled={!watch(`products.${index}.warehouse_id`)}
+                >
+                  {(item) => (
+                    <AutocompleteItem key={item.id} textValue={item.name}>
+                      <div>
+                        <p className="text-sm font-semibold">{item.name}</p>
+                        <span className="text-xs flex justify-between gap-2">
+                          <p className=" text-gray-500">{item.code}</p>
+                          {item?.unit?.name}
+                        </span>
+                      </div>
                     </AutocompleteItem>
                   )}
                 </Autocomplete>
@@ -227,6 +252,10 @@ function NewSale() {
               })}
               errorMessage={errors.products?.[index]?.quantity?.message}
               isInvalid={errors.products?.[index]?.quantity ? true : false}
+              description={`Stock: ${getStock(
+                watch(`products.${index}.product_id`),
+                watch(`products.${index}.warehouse_id`)
+              )}`}
             />
             <Input
               label="Precio unitario"
@@ -275,7 +304,7 @@ function NewSale() {
             variant="shadow"
             onClick={() => router.push("/sale")}
           >
-            Cancelar venta
+            Cancelar compra
           </Button>
           <Button
             color="primary"
@@ -293,7 +322,7 @@ function NewSale() {
             Agregar producto
           </Button>
           <Button color="success" variant="shadow" type="submit">
-            Registrar venta
+            Registrar compra
           </Button>
         </div>
       </form>
