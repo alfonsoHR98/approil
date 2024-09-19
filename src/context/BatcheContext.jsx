@@ -52,6 +52,15 @@ export const BatcheProvider = ({ children }) => {
     }
   }
 
+  async function getBatcheDetail(id) {
+    try {
+      const res = await axios.get(`/batche/${id}`);
+      return res.data;
+    } catch (err) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -70,6 +79,7 @@ export const BatcheProvider = ({ children }) => {
         newBatche,
         removeBatche,
         newBatcheDetail,
+        getBatcheDetail,
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import PageComponent from "@components/PageComponent";
+import { useRouter } from "next/navigation";
 import { useInventory } from "@context/InventoryContext";
 import { useWarehouse } from "@context/WarehouseContext";
 import { useSale } from "@context/SaleContext";
@@ -13,8 +14,10 @@ import {
   Divider,
 } from "@nextui-org/react";
 import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
 
 function Transfer() {
+  const router = useRouter();
   const { inventories, loadInventories, addInventory, subtractInventory } =
     useInventory();
   const { warehouses, loadWarehouses } = useWarehouse();
@@ -114,6 +117,10 @@ function Transfer() {
         warehouse_id: data.des_warehouse,
         quantity: parseFloat(data.quantity),
       });
+
+      reset();
+      toast.success("Transferencia realizada correctamente");
+      router.push("/inventory");
     }
   });
 

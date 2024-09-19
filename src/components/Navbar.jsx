@@ -56,12 +56,12 @@ const pages = [
     links: [
       {
         name: "Compras realizadas",
-        href: "/purchase",
+        href: "/batche",
         icon: <TbTableColumn />,
       },
       {
         name: "Nueva compra",
-        href: "/purchase/new-purchase",
+        href: "/batche/new-batche",
         icon: <GiPayMoney />,
       },
     ],
@@ -83,7 +83,7 @@ const pages = [
         name: "Trasferencias",
         href: "/transfer",
         icon: <TbArrowsLeftRight />,
-      }
+      },
     ],
   },
   {

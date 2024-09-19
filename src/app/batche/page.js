@@ -4,7 +4,7 @@ import PageComponent from "@components/PageComponent";
 import TableComponent from "@components/TableComponent";
 import { useBatche } from "@context/BatcheContext";
 
-function Purchase() {
+function Batche() {
   const { batches, loadBatches, removeBatche } = useBatche();
 
   React.useEffect(() => {
@@ -26,6 +26,10 @@ function Purchase() {
     <PageComponent tittle="Compras">
       <TableComponent
         columns={[
+          {
+            key: "createdAt",
+            label: "Fecha",
+          },
           {
             key: "supplier.name",
             label: "Proveedor",
@@ -51,10 +55,10 @@ function Purchase() {
         rowNumber={10}
         removeItem={removeBatche}
         calculateTotal={calculateTotal}
-        route="purchase"
+        route="batche"
       />
     </PageComponent>
   );
 }
 
-export default Purchase;
+export default Batche;

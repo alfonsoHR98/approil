@@ -16,6 +16,10 @@ function Sale() {
       <TableComponent
         columns={[
           {
+            key: "createdAt",
+            label: "Fecha",
+          },
+          {
             key: "client.name",
             label: "Cliente",
           },

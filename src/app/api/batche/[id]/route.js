@@ -1,6 +1,30 @@
 import { NextResponse } from "next/server";
 import db from "@lib/db";
 
+export async function GET(req, { params }) {
+  const id = params.id;
+
+  const batche = await db.batche.findUnique({
+    where: { id },
+    include: {
+      BatcheDetail: {
+        include: {
+          product: true,
+        },
+      },
+      sup_warehouse: true,
+      supplier: true,
+      warehouse: true,
+    },
+  });
+
+  if (!batche) {
+    return NextResponse.json({ message: "Lote no encontrado" }, { status: 404 });
+  }
+
+  return NextResponse.json(batche, { status: 200 });
+}
+
 export async function DELETE(req, { params }) {
   const id = params.id;
 

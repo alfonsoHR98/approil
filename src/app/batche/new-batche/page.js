@@ -17,7 +17,7 @@ import {useInventory} from "@context/InventoryContext"
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 
-function NewPurchase() {
+function NewBatche() {
   const { products, loadProducts } = useProduct();
   const { warehouses, loadWarehouses } = useWarehouse();
   const { suppliers, loadSuppliers } = useSupplier();
@@ -262,4 +262,4 @@ function NewPurchase() {
   );
 }
 
-export default NewPurchase;
+export default NewBatche;

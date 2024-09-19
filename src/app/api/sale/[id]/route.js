@@ -1,6 +1,29 @@
 import { NextResponse } from "next/server";
 import db from "@lib/db";
 
+export async function GET(req, { params }) {
+  const id = params.id;
+
+  const sale = await db.sale.findUnique({
+    where: { id },
+    include: {
+      SaleDetail: {
+        include: {
+          product: true,
+        },
+      },
+      client: true,
+      warehouse: true,
+    },
+  });
+
+  if (!sale) {
+    return NextResponse.json({ error: "Venta no encontrada" }, { status: 404 });
+  }
+
+  return NextResponse.json(sale, { status: 200 });
+}
+
 export async function DELETE(req, { params }) {
   const id = params.id;
 

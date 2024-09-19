@@ -51,6 +51,15 @@ export const SaleProvider = ({ children }) => {
     }
   }
 
+  async function getSaleDetail(id) {
+    try {
+      const res = await axios.get(`/sale/${id}`);
+      return res.data;
+    } catch (error) {
+      setError(error.response?.data?.message);
+    }
+  }
+
   useEffect(() => {
     const clean = setTimeout(() => {
       setError(null);
@@ -69,6 +78,7 @@ export const SaleProvider = ({ children }) => {
         newSale,
         removeSale,
         newSaleDetail,
+        getSaleDetail,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
+    // Obtener todos los datos de inventario junto con el producto y el almacén
     const inventoryData = await prisma.inventory.findMany({
       include: {
         product: true, // Información del producto
@@ -13,42 +14,41 @@ export async function GET() {
       },
     });
 
-    const inventoryResponse = await Promise.all(
-      inventoryData.map(async (item, index) => {
-        // Obtener todos los batches para este producto y almacén
-        const batches = await prisma.batche.findMany({
-          where: {
-            warehouse_id: item.warehouse_id, // Almacén
-            BatcheDetail: {
-              some: {
-                product_id: item.product_id, // Producto
-              },
-            },
-          },
-          include: {
-            BatcheDetail: true, // Incluir los detalles del batch
-          },
-        });
+    // Obtener todos los batches y sus detalles relacionados con los productos y almacenes
+    const batches = await prisma.batche.findMany({
+      include: {
+        BatcheDetail: true, // Incluir los detalles del batch
+      },
+    });
 
-        // Calcular el precio promedio basado en la cantidad de compras
-        const batcheDetails = batches.flatMap((batch) => batch.BatcheDetail);
+    // Procesar los datos del inventario y calcular el precio promedio
+    const inventoryResponse = inventoryData.map((item, index) => {
+      // Filtrar los batches correspondientes al almacén actual
+      const relevantBatches = batches.filter(
+        (batch) => batch.warehouse_id === item.warehouse_id
+      );
 
-        const averagePrice =
-          batcheDetails.reduce(
-            (total, batcheDetail) => total + batcheDetail.price,
-            0
-          ) / batcheDetails.length || 0;
+      // Filtrar los detalles de batch para el producto actual en este almacén
+      const relevantBatcheDetails = relevantBatches
+        .flatMap((batch) => batch.BatcheDetail)
+        .filter((detail) => detail.product_id === item.product_id);
 
-        return {
-          id: index, // Añadir un índice único como key
-          product: item.product, // Información del producto
-          warehouse: item.warehouse, // Información del almacén
-          quantity: item.quantity, // Cantidad registrada en el inventario
-          price: averagePrice, // Precio promedio (0 si no hay detalles)
-          totalValue: item.quantity * averagePrice, // Valor total del
-        };
-      })
-    );
+      // Calcular el precio promedio solo de los batches que corresponden a este producto
+      const averagePrice =
+        relevantBatcheDetails.reduce(
+          (total, detail) => total + detail.price,
+          0
+        ) / relevantBatcheDetails.length || 0;
+
+      return {
+        id: index, // Añadir un índice único como clave
+        product: item.product, // Información del producto
+        warehouse: item.warehouse, // Información del almacén
+        quantity: item.quantity, // Cantidad registrada en el inventario
+        price: averagePrice, // Precio promedio (0 si no hay detalles)
+        totalValue: item.quantity * averagePrice, // Valor total
+      };
+    });
 
     return NextResponse.json(inventoryResponse);
   } catch (error) {
