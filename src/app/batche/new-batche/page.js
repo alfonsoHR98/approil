@@ -75,7 +75,7 @@ function NewBatche() {
     });
 
     toast.success("Compra registrada correctamente");
-    router.push("/purchase");
+    router.push("/batche");
   });
 
   React.useEffect(() => {

@@ -111,7 +111,7 @@ function NewSale() {
   };
 
   return (
-    <PageComponent title="Nueva venta">
+    <PageComponent tittle="Nueva venta">
       <form onSubmit={onSubmit}>
         <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           <Controller
@@ -304,7 +304,7 @@ function NewSale() {
             variant="shadow"
             onClick={() => router.push("/sale")}
           >
-            Cancelar compra
+            Cancelar venta
           </Button>
           <Button
             color="primary"
@@ -322,7 +322,7 @@ function NewSale() {
             Agregar producto
           </Button>
           <Button color="success" variant="shadow" type="submit">
-            Registrar compra
+            Registrar venta
           </Button>
         </div>
       </form>

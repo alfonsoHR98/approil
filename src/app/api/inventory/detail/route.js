@@ -40,6 +40,13 @@ export async function GET() {
           0
         ) / relevantBatcheDetails.length || 0;
 
+      // obtener la cantidad total de productos en el inventario
+      const totalQuantity = relevantBatcheDetails.reduce(
+        (total, detail) => total + detail.quantity,
+        0
+      );
+
+      // Devolver la información del inventario con el precio promedio calculado
       return {
         id: index, // Añadir un índice único como clave
         product: item.product, // Información del producto

@@ -75,7 +75,7 @@ model Product {
   name      String
   descrip   String
   brand     String
-  code      String
+  code      String  @unique
   unit      SaleUnit @relation(fields: [unit_id], references: [id])
   unit_id   String
   state     Boolean @default(true)
