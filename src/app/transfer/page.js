@@ -13,7 +13,7 @@ import {
   AutocompleteItem,
   Divider,
 } from "@nextui-org/react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import { toast } from "react-toastify";
 
 function Transfer() {
@@ -24,6 +24,7 @@ function Transfer() {
   const { newSale, newSaleDetail } = useSale();
   const { newBatche, newBatcheDetail } = useBatche();
   const [filteredProducts, setFilteredProducts] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -46,6 +47,7 @@ function Transfer() {
   }, []);
 
   const supWarehouse = watch("sup_warehouse");
+  const desWarehouse = watch("des_warehouse");
   const selectedProduct = watch("product");
 
   React.useEffect(() => {
@@ -59,16 +61,16 @@ function Transfer() {
     }
   }, [supWarehouse, inventories]);
 
-  const getAvailableQuantity = () => {
+  const getAvailableQuantity = (warehouseId) => {
     const inventoryItem = inventories.find(
       (item) =>
-        item.product.id === selectedProduct &&
-        item.warehouse.id === supWarehouse
+        item.product.id === selectedProduct && item.warehouse.id === warehouseId
     );
     return inventoryItem ? inventoryItem.quantity : 0;
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true);
     const inventoryItem = inventories.find(
       (item) =>
         item.product.id === data.product &&
@@ -118,10 +120,9 @@ function Transfer() {
         quantity: parseFloat(data.quantity),
       });
 
-      reset();
       toast.success("Transferencia realizada correctamente");
-      router.push("/inventory");
     }
+    setLoading(false);
   });
 
   return (
@@ -152,6 +153,32 @@ function Transfer() {
               </Autocomplete>
             )}
           />
+          <Controller
+            name="des_warehouse"
+            control={control}
+            rules={{ required: "Este campo es requerido" }}
+            render={({ field }) => (
+              <Autocomplete
+                label="Almacén de destino"
+                placeholder="Seleccione un almacén de destino"
+                variant="bordered"
+                isRequired
+                defaultItems={warehouses}
+                selectedKey={field.value}
+                onSelectionChange={(key) => field.onChange(key)}
+                errorMessage={errors.des_warehouse?.message}
+                isInvalid={errors.des_warehouse ? true : false}
+              >
+                {(item) => (
+                  <AutocompleteItem key={item.id} textValue={item.name}>
+                    {item.name}
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
+            )}
+          />
+        </div>
+        <div className="flex flex-row gap-4">
           <Controller
             name="product"
             control={control}
@@ -184,32 +211,7 @@ function Transfer() {
               </Autocomplete>
             )}
           />
-        </div>
-        <div className="flex flex-row gap-4">
-          <Controller
-            name="des_warehouse"
-            control={control}
-            rules={{ required: "Este campo es requerido" }}
-            render={({ field }) => (
-              <Autocomplete
-                label="Almacén de destino"
-                placeholder="Seleccione un almacén de destino"
-                variant="bordered"
-                isRequired
-                defaultItems={warehouses}
-                selectedKey={field.value}
-                onSelectionChange={(key) => field.onChange(key)}
-                errorMessage={errors.des_warehouse?.message}
-                isInvalid={errors.des_warehouse ? true : false}
-              >
-                {(item) => (
-                  <AutocompleteItem key={item.id} textValue={item.name}>
-                    {item.name}
-                  </AutocompleteItem>
-                )}
-              </Autocomplete>
-            )}
-          />
+
           <Input
             label="Cantidad"
             placeholder="Ingrese la cantidad"
@@ -222,7 +224,7 @@ function Transfer() {
                 message: "Formato incorrecto",
               },
               validate: (value) =>
-                parseFloat(value) <= getAvailableQuantity() ||
+                parseFloat(value) <= getAvailableQuantity(supWarehouse) ||
                 "La cantidad no puede ser mayor a la disponible",
             })}
             errorMessage={errors.quantity?.message}
@@ -232,49 +234,52 @@ function Transfer() {
         <Divider />
         <div>
           <h2 className="text-lg font-semibold">Detalle de la transferencia</h2>
-          <div className="flex flex-col gap-4">
-            <p>
-              Producto:{" "}
-              {
-                filteredProducts.find((item) => item.id === watch("product"))
-                  ?.name
-              }
-            </p>
-
-            <p>
-              Almacén de origen:{" "}
-              {
-                warehouses.find((item) => item.id === watch("sup_warehouse"))
-                  ?.name
-              }
-            </p>
-            <p>
-              Almacén de destino:{" "}
-              {
-                warehouses.find((item) => item.id === watch("des_warehouse"))
-                  ?.name
-              }
-            </p>
-            <p>
-              Cantidad disponible:{" "}
-              {
-                inventories.find(
-                  (item) =>
-                    item.product.id === watch("product") &&
-                    item.warehouse.id === watch("sup_warehouse")
-                )?.quantity
-              }
-            </p>
-            <p>
-              Cantidad:{" "}
-              <span className={errors.quantity ? "text-red-500" : ""}>
-                {watch("quantity")}
-              </span>
-            </p>
+          <div className="flex flex-row gap-4">
+            <div className="flex-1">
+              <h3 className="font-semibold">Almacén de origen</h3>
+              <p>
+                Producto:{" "}
+                {
+                  filteredProducts.find((item) => item.id === watch("product"))
+                    ?.name
+                }
+              </p>
+              <p>
+                Almacén de origen:{" "}
+                {
+                  warehouses.find((item) => item.id === watch("sup_warehouse"))
+                    ?.name
+                }
+              </p>
+              <p>Cantidad disponible: {getAvailableQuantity(supWarehouse)}</p>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold">Almacén de destino</h3>
+              <p>
+                Producto:{" "}
+                {
+                  filteredProducts.find((item) => item.id === watch("product"))
+                    ?.name
+                }
+              </p>
+              <p>
+                Almacén de destino:{" "}
+                {
+                  warehouses.find((item) => item.id === watch("des_warehouse"))
+                    ?.name
+                }
+              </p>
+              <p>Cantidad disponible: {getAvailableQuantity(desWarehouse)}</p>
+            </div>
           </div>
         </div>
         <Divider />
-        <Button color="success" variant="shadow" type="submit">
+        <Button
+          color="success"
+          variant="shadow"
+          isDisabled={loading}
+          type="submit"
+        >
           Transferir mercancía
         </Button>
       </form>
