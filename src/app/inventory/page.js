@@ -11,8 +11,6 @@ function Inventory() {
     loadInventories();
   }, []);
 
-  console.log(inventories);
-
   return (
     <PageComponent tittle="Inventario">
       <TableComponent

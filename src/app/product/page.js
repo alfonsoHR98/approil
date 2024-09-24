@@ -40,7 +40,14 @@ function Product() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
+    const { name, descrip, brand, code, unit_id } = data;
+    const productFound = products.find((p) => p.code === code);
+    if (productFound) {
+      toast.error("El producto con este código ya existe");
+      return;
+    }
+    newProduct({ name, descrip, brand, code, unit_id });
+    reset();
   });
 
   React.useEffect(() => {

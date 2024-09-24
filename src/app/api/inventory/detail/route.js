@@ -9,7 +9,11 @@ export async function GET() {
     // Obtener todos los datos de inventario junto con el producto y el almacén
     const inventoryData = await prisma.inventory.findMany({
       include: {
-        product: true, // Información del producto
+        product: {
+          include: {
+            unit: true, // Incluir la información de la unidad
+          },
+        }, // Información del producto
         warehouse: true, // Información del almacén
       },
     });
