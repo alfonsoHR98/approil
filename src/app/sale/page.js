@@ -11,6 +11,17 @@ function Sale() {
     loadSales();
   }, []);
 
+  const calculateTotal = (sale) => {
+    const total = sale.SaleDetail.reduce((total, item) => {
+      return total + item.quantity * item.price;
+    }, 0);
+
+    return total.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    });
+  };
+
   return (
     <PageComponent tittle="Ventas">
       <TableComponent
@@ -36,13 +47,18 @@ function Sale() {
             label: "Tipo de venta",
           },
           {
+            key: "total",
+            label: "Total",
+          },
+          {
             key: "actions",
             label: "Acciones",
           },
         ]}
         data={sales}
-        rowNumber={10}
+        rowNumber={6}
         removeItem={removeSale}
+        calculateTotal={calculateTotal}
         route="sale"
       />
     </PageComponent>

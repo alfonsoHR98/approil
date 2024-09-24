@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import db from "@lib/db";
+import SaleDetail from "../../sale/[id]/page";
 
 export async function GET(req) {
   const sales = await db.sale.findMany({
     include: {
       client: true,
+      SaleDetail: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
   return NextResponse.json(sales, { status: 200 });

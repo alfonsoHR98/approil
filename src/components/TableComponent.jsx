@@ -15,6 +15,7 @@ import {
 import React, { useState, useMemo } from "react";
 import { TbEye, TbEdit, TbTrash, TbDownload, TbSearch } from "react-icons/tb";
 import { toast } from "react-toastify";
+import * as XLSX from "xlsx"; // Importa la biblioteca xlsx
 
 const actions = (item, deleteFunction, route) => {
   const handleDelete = () => {
@@ -57,6 +58,7 @@ const actions = (item, deleteFunction, route) => {
     </div>
   );
 };
+
 const getNestedValue = (obj, key) => {
   return key.split(".").reduce((o, i) => (o ? o[i] : null), obj);
 };
@@ -95,6 +97,35 @@ function TableComponent({
     return filteredData.slice(start, end);
   }, [page, filteredData]);
 
+  const exportToExcel = () => {
+    const filteredColumns = columns.filter((col) => col.key !== "actions");
+    const headers = filteredColumns.map((col) => col.label);
+
+    // Agrega la columna "Total" a los encabezados si calculateTotal está definido
+    if (calculateTotal) {
+      headers.push("Total");
+    }
+
+    const worksheetData = [
+      headers, // Column headers
+      ...filteredData.map((item) => {
+        const row = filteredColumns.map(
+          (col) => getNestedValue(item, col.key) ?? ""
+        );
+        if (calculateTotal) {
+          row.push(calculateTotal(item));
+        }
+        return row;
+      }),
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Table Data");
+
+    XLSX.writeFile(workbook, "table_data.xlsx");
+  };
+
   return (
     <div className="mt-4">
       <div className="flex justify-between">
@@ -111,6 +142,7 @@ function TableComponent({
           color="success"
           variant="shadow"
           endContent={<TbDownload size={24} />}
+          onClick={exportToExcel}
         >
           Exportar
         </Button>
