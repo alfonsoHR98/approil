@@ -1,3 +1,9 @@
+-- CreateEnum
+CREATE TYPE "SupplierType" AS ENUM ('SUPPLIER', 'WAREHOUSE');
+
+-- CreateEnum
+CREATE TYPE "SaleType" AS ENUM ('CLIENT', 'WAREHOUSE');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -85,9 +91,11 @@ CREATE TABLE "SaleUnit" (
 -- CreateTable
 CREATE TABLE "Batche" (
     "id" TEXT NOT NULL,
-    "supplier_id" TEXT NOT NULL,
+    "supplier_id" TEXT,
+    "sup_warehouse_id" TEXT,
     "warehouse_id" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "supplierType" "SupplierType" NOT NULL,
+    "bill" TEXT,
     "state" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -112,10 +120,11 @@ CREATE TABLE "BatcheDetail" (
 -- CreateTable
 CREATE TABLE "Sale" (
     "id" TEXT NOT NULL,
-    "client_id" TEXT NOT NULL,
-    "bill" TEXT NOT NULL,
-    "account" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
+    "client_id" TEXT,
+    "warehouse_id" TEXT,
+    "saleType" "SaleType" NOT NULL,
+    "bill" TEXT,
+    "account" TEXT,
     "state" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -140,7 +149,7 @@ CREATE TABLE "SaleDetail" (
 );
 
 -- CreateTable
-CREATE TABLE "inventory" (
+CREATE TABLE "Inventory" (
     "id" TEXT NOT NULL,
     "product_id" TEXT NOT NULL,
     "warehouse_id" TEXT NOT NULL,
@@ -149,11 +158,11 @@ CREATE TABLE "inventory" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "inventory_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Inventory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "waste" (
+CREATE TABLE "Waste" (
     "id" TEXT NOT NULL,
     "product_id" TEXT NOT NULL,
     "warehouse_id" TEXT NOT NULL,
@@ -164,32 +173,41 @@ CREATE TABLE "waste" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "waste_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Waste_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Product_code_key" ON "Product"("code");
+
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "SaleUnit"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Batche" ADD CONSTRAINT "Batche_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "Supplier"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Batche" ADD CONSTRAINT "Batche_supplier_id_fkey" FOREIGN KEY ("supplier_id") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Batche" ADD CONSTRAINT "Batche_sup_warehouse_id_fkey" FOREIGN KEY ("sup_warehouse_id") REFERENCES "Warehouse"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Batche" ADD CONSTRAINT "Batche_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BatcheDetail" ADD CONSTRAINT "BatcheDetail_batche_id_fkey" FOREIGN KEY ("batche_id") REFERENCES "Batche"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BatcheDetail" ADD CONSTRAINT "BatcheDetail_batche_id_fkey" FOREIGN KEY ("batche_id") REFERENCES "Batche"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BatcheDetail" ADD CONSTRAINT "BatcheDetail_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Sale" ADD CONSTRAINT "Sale_client_id_fkey" FOREIGN KEY ("client_id") REFERENCES "Client"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Sale" ADD CONSTRAINT "Sale_client_id_fkey" FOREIGN KEY ("client_id") REFERENCES "Client"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SaleDetail" ADD CONSTRAINT "SaleDetail_sale_id_fkey" FOREIGN KEY ("sale_id") REFERENCES "Sale"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Sale" ADD CONSTRAINT "Sale_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SaleDetail" ADD CONSTRAINT "SaleDetail_sale_id_fkey" FOREIGN KEY ("sale_id") REFERENCES "Sale"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SaleDetail" ADD CONSTRAINT "SaleDetail_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -198,13 +216,13 @@ ALTER TABLE "SaleDetail" ADD CONSTRAINT "SaleDetail_product_id_fkey" FOREIGN KEY
 ALTER TABLE "SaleDetail" ADD CONSTRAINT "SaleDetail_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory" ADD CONSTRAINT "inventory_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "inventory" ADD CONSTRAINT "inventory_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Inventory" ADD CONSTRAINT "Inventory_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "waste" ADD CONSTRAINT "waste_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Waste" ADD CONSTRAINT "Waste_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "waste" ADD CONSTRAINT "waste_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Waste" ADD CONSTRAINT "Waste_warehouse_id_fkey" FOREIGN KEY ("warehouse_id") REFERENCES "Warehouse"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

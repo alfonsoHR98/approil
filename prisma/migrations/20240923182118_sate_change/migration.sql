@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Sale" ALTER COLUMN "bill" DROP NOT NULL,
-ALTER COLUMN "account" DROP NOT NULL;
