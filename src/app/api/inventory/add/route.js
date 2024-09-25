@@ -5,7 +5,7 @@ export async function POST(req) {
   const data = await req.json();
   const { product_id, warehouse_id, quantity } = data;
 
-  const foundRegister = await db.inventory.findFirst({
+  const foundRegister = await db.inventory.findUnique({
     where: {
       AND: [{ product_id: product_id }, { warehouse_id: warehouse_id }],
     },

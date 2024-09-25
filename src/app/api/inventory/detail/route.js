@@ -1,13 +1,12 @@
 // pages/api/inventory.js
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import db from "@lib/db";
 
 export async function GET() {
   try {
     // Obtener todos los datos de inventario junto con el producto y el almacén
-    const inventoryData = await prisma.inventory.findMany({
+    const inventoryData = await db.inventory.findMany({
       include: {
         product: {
           include: {
@@ -19,7 +18,7 @@ export async function GET() {
     });
 
     // Obtener todos los batches y sus detalles relacionados con los productos y almacenes
-    const batches = await prisma.batche.findMany({
+    const batches = await db.batche.findMany({
       include: {
         BatcheDetail: true, // Incluir los detalles del batch
       },
