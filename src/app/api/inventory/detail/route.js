@@ -1,5 +1,4 @@
 // pages/api/inventory.js
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import db from "@lib/db";
 

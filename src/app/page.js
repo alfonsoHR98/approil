@@ -5,10 +5,7 @@ import axios from "@lib/axios";
 import {
   Card,
   CardHeader,
-  CardBody,
-  CardFooter,
-  Image,
-  Button,
+  CardBody
 } from "@nextui-org/react";
 import { months } from "@utils/types";
 import Chart from "chart.js/auto";
