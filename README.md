@@ -3,4 +3,4 @@
 ## web aplication
 
 ### npm  run dev
-para correr la aplicacion ayudaaaaaa
+para correr la aplicacion ayuda
