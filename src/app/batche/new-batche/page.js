@@ -13,7 +13,7 @@ import { useWarehouse } from "@context/WarehouseContext";
 import { useProduct } from "@context/ProductContext";
 import { useSupplier } from "@context/SupplierContext";
 import { useBatche } from "@context/BatcheContext";
-import {useInventory} from "@context/InventoryContext"
+import { useInventory } from "@context/InventoryContext";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -57,7 +57,7 @@ function NewBatche() {
       warehouse_id: data.warehouse_id,
       supplierType: "SUPPLIER",
       bill: data.bill,
-    })
+    });
     const batche_id = res.id;
 
     data.products.forEach(async (product) => {
