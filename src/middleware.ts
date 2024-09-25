@@ -1,6 +1,6 @@
 "use client";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "../auth";
+import { auth } from "@/auth";
 import { signOut } from "next-auth/react";
 
 export async function middleware(req: NextRequest) {
