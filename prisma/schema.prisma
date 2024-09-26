@@ -68,8 +68,6 @@ model Warehouse {
   waste        Waste[]
 
   Sale Sale[]
-
-  Stock Stock[]
 }
 
 model Product {
@@ -91,8 +89,6 @@ model Product {
   inventory Inventory[]
 
   waste Waste[]
-
-  Stock Stock[]
 }
 
 model SaleUnit {
@@ -194,9 +190,7 @@ model Inventory {
 model Stock {
   id        String   @id @default(uuid())
   product_id String
-  product   Product  @relation(fields: [product_id], references: [id])
   warehouse_id String
-  warehouse Warehouse @relation(fields: [warehouse_id], references: [id])
   quantity  Float
   state     Boolean  @default(true)
   createdAt DateTime @default(now())
