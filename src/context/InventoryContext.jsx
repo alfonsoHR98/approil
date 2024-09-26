@@ -1,5 +1,6 @@
+"use client"
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "@lib/axios";
+import axios from "axios";
 
 const InventoryContext = createContext();
 
@@ -17,7 +18,7 @@ export const InventoryProvider = ({ children }) => {
 
   const loadInventories = async () => {
     try {
-      const res = await axios.get("/inventory/detail");
+      const res = await axios.get("/api/inventory/detail");
       setInventories(res.data);
     } catch (error) {
       setError(error.response.data.message);
@@ -26,7 +27,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function addInventory(data) {
     try {
-      const res = await axios.post("/inventory/add", data);
+      const res = await axios.post("/api/inventory/add", data);
       loadInventories();
     } catch (error) {
       setError(error.response.data.message);
@@ -35,7 +36,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function subtractInventory(data) {
     try {
-      const res = await axios.post("/inventory/subtract", data);
+      const res = await axios.post("/api/inventory/subtract", data);
       loadInventories();
     } catch (error) {
       setError(error.response.data.message);
