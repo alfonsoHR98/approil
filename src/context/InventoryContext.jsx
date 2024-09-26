@@ -1,14 +1,7 @@
-"use client"
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 
-const InventoryContext = createContext({
-  inventories: [],
-  error: null,
-  loadInventories: () => {},
-  addInventory: () => {},
-  subtractInventory: () => {},
-});
+const InventoryContext = createContext();
 
 export const useInventory = () => {
   const context = useContext(InventoryContext);

@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "@lib/axios";
+import axios from "axios";
 
 const WarehouseContext = createContext();
 
@@ -17,16 +17,16 @@ export const WarehouseProvider = ({ children }) => {
 
   const loadWarehouses = async () => {
     try {
-      const res = await axios.get("/warehouse");
+      const res = await axios.get("/api/warehouse");
       setWarehouses(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
     }
-  }
+  };
 
   async function newWarehouse(data) {
     try {
-      await axios.post("/warehouse", data);
+      await axios.post("/api/warehouse", data);
       loadWarehouses();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -35,7 +35,7 @@ export const WarehouseProvider = ({ children }) => {
 
   async function removeWarehouse(id) {
     try {
-      await axios.delete(`/warehouse/${id}`);
+      await axios.delete(`/api/warehouse/${id}`);
       loadWarehouses();
     } catch (error) {
       setError(error.response?.data?.message);

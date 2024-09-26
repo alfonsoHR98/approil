@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "@lib/axios";
+import axios from "axios";
 
 const WasteContext = createContext();
 

@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "@lib/axios";
+import axios from "axios";
 
 const SaleContext = createContext();
 
@@ -9,7 +9,7 @@ export const useSale = () => {
     throw new Error("useSale must be used within a SaleProvider");
   }
   return context;
-}
+};
 
 export const SaleProvider = ({ children }) => {
   const [sales, setSales] = useState([]);
@@ -17,16 +17,16 @@ export const SaleProvider = ({ children }) => {
 
   const loadSales = async () => {
     try {
-      const res = await axios.get("/sale");
+      const res = await axios.get("/api/sale");
       setSales(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
     }
-  }
+  };
 
   async function newSale(data) {
     try {
-      const res = await axios.post("/sale", data);
+      const res = await axios.post("/api/sale", data);
       loadSales();
       return res.data;
     } catch (error) {
@@ -36,7 +36,7 @@ export const SaleProvider = ({ children }) => {
 
   async function removeSale(id) {
     try {
-      await axios.delete(`/sale/${id}`);
+      await axios.delete(`/api/sale/${id}`);
       loadSales();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -45,7 +45,7 @@ export const SaleProvider = ({ children }) => {
 
   async function newSaleDetail(data) {
     try {
-      await axios.post("/saleDetail", data);
+      await axios.post("/api/saleDetail", data);
     } catch (error) {
       setError(error.response?.data?.message);
     }
@@ -53,7 +53,7 @@ export const SaleProvider = ({ children }) => {
 
   async function getSaleDetail(id) {
     try {
-      const res = await axios.get(`/sale/${id}`);
+      const res = await axios.get(`/api/sale/${id}`);
       return res.data;
     } catch (error) {
       setError(error.response?.data?.message);

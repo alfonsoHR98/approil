@@ -1,12 +1,8 @@
 "use client";
 import React from "react";
 import PageComponent from "@components/PageComponent";
-import axios from "@lib/axios";
-import {
-  Card,
-  CardHeader,
-  CardBody
-} from "@nextui-org/react";
+import axios from "axios";
+import { Card, CardHeader, CardBody } from "@nextui-org/react";
 import { months } from "@utils/types";
 import Chart from "chart.js/auto";
 
@@ -19,9 +15,9 @@ function HomePage() {
 
   async function getStats() {
     try {
-      const response = await axios.get("/stats/top-selling-products");
-      const response2 = await axios.get("/stats/salesByMonth");
-      const response3 = await axios.get("/stats/wastePerProduct");
+      const response = await axios.get("/api/stats/top-selling-products");
+      const response2 = await axios.get("/api/stats/salesByMonth");
+      const response3 = await axios.get("/api/stats/wastePerProduct");
       setTop10Products(response.data);
       setSalesByMonth(response2.data);
       setWasteProducts(response3.data);
@@ -167,7 +163,9 @@ function HomePage() {
                           {product.product.code} - {product.product.unit.name}
                         </pre>
                       </span>
-                      <span className="text-gray-500">{product.totalWaste}</span>
+                      <span className="text-gray-500">
+                        {product.totalWaste}
+                      </span>
                     </li>
                   ))}
               </ul>

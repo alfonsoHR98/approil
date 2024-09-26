@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "@lib/axios";
+import axios from "axios";
 
 const SaleUnitContext = createContext();
 
@@ -17,7 +17,7 @@ export const SaleUnitProvider = ({ children }) => {
 
   const loadSaleUnits = async () => {
     try {
-      const res = await axios.get("/saleUnit");
+      const res = await axios.get("/api/saleUnit");
       setSaleUnits(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
@@ -26,7 +26,7 @@ export const SaleUnitProvider = ({ children }) => {
 
   async function newSaleUnit(data) {
     try {
-      await axios.post("/saleUnit", data);
+      await axios.post("/api/saleUnit", data);
       loadSaleUnits();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -35,7 +35,7 @@ export const SaleUnitProvider = ({ children }) => {
 
   async function removeSaleUnit(id) {
     try {
-      await axios.delete(`/saleUnit/${id}`);
+      await axios.delete(`/api/saleUnit/${id}`);
       loadSaleUnits();
     } catch (error) {
       setError(error.response?.data?.message);
