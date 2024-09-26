@@ -28,13 +28,13 @@ export function Providers({ children }) {
       <NextUIProvider>
         <BatcheProvider>
           <ClientProvider>
-            <InventoryProvider>
-              <ProductProvider>
-                <SaleProvider>
-                  <SaleUnitProvider>
-                    <SupplierProvider>
-                      <WarehouseProvider>
-                        <WasteProvider>
+            <ProductProvider>
+              <SaleProvider>
+                <SaleUnitProvider>
+                  <SupplierProvider>
+                    <WarehouseProvider>
+                      <WasteProvider>
+                        <InventoryProvider>
                           {!excludeRoutes.includes(pathname) && <NavBar />}
                           {children}
                           <ToastContainer
@@ -49,13 +49,13 @@ export function Providers({ children }) {
                             pauseOnHover
                             theme="colored"
                           />
-                        </WasteProvider>
-                      </WarehouseProvider>
-                    </SupplierProvider>
-                  </SaleUnitProvider>
-                </SaleProvider>
-              </ProductProvider>
-            </InventoryProvider>
+                        </InventoryProvider>
+                      </WasteProvider>
+                    </WarehouseProvider>
+                  </SupplierProvider>
+                </SaleUnitProvider>
+              </SaleProvider>
+            </ProductProvider>
           </ClientProvider>
         </BatcheProvider>
       </NextUIProvider>
