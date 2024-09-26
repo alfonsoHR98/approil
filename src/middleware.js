@@ -1,9 +1,9 @@
 "use client";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { signOut } from "next-auth/react";
 
-export async function middleware(req: NextRequest) {
+export async function middleware(req) {
   const session = await auth();
 
   const dateNow = new Date();
