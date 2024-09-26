@@ -13,5 +13,9 @@ export async function GET() {
     },
   });
   console.log(res);
-  return NextResponse.json(res, { status: 200 });
+  return NextResponse.json(res, {
+    status: 200,
+    headers: { "Cache-Control": "no-store" },
+  });
+
 }
