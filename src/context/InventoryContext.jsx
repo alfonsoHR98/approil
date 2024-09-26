@@ -26,7 +26,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function addInventory(data) {
     try {
-      await axios.post("/inventory/add", data);
+      const res = await axios.post("/inventory/add", data);
       loadInventories();
     } catch (error) {
       setError(error.response.data.message);
@@ -35,7 +35,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function subtractInventory(data) {
     try {
-      await axios.post("/inventory/subtract", data);
+      const res = await axios.post("/inventory/subtract", data);
       loadInventories();
     } catch (error) {
       setError(error.response.data.message);
@@ -50,6 +50,10 @@ export const InventoryProvider = ({ children }) => {
       clearTimeout(clean);
     };
   }, [error]);
+
+  useEffect(() => {
+    loadInventories();
+  }, []);
 
   return (
     <InventoryContext.Provider
