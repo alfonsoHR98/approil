@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "install:prod": "npm ci --omit=dev",
     "postinstall": "prisma generate"
   },
   "dependencies": {
