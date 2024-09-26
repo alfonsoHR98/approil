@@ -17,8 +17,8 @@ export const InventoryProvider = ({ children }) => {
 
   const loadInventories = async () => {
     try {
-      const { data } = await axios.get("/inventory/detail");
-      setInventories(data);
+      const res = await axios.get("/inventory/detail");
+      setInventories(res.data);
     } catch (error) {
       setError(error.response.data.message);
     }
