@@ -64,6 +64,7 @@ export async function GET() {
     console.error(error);
     return NextResponse.json(
       { error: "Error al obtener el inventario" },
+      { error },
       { status: 500 }
     );
   }
