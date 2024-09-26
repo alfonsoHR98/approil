@@ -2,7 +2,13 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 
-const InventoryContext = createContext();
+const InventoryContext = createContext({
+  inventories: [],
+  error: null,
+  loadInventories: () => {},
+  addInventory: () => {},
+  subtractInventory: () => {},
+});
 
 export const useInventory = () => {
   const context = useContext(InventoryContext);
@@ -16,7 +22,7 @@ export const InventoryProvider = ({ children }) => {
   const [inventories, setInventories] = useState([]);
   const [error, setError] = useState(null);
 
-  const loadInventories = async () => {
+  async function loadInventories() {
     try {
       const res = await axios.get("/api/inventory/detail");
       setInventories(res.data);
@@ -28,7 +34,7 @@ export const InventoryProvider = ({ children }) => {
   async function addInventory(data) {
     try {
       const res = await axios.post("/api/inventory/add", data);
-      loadInventories();
+      await loadInventories();
     } catch (error) {
       setError(error.response.data.message);
     }
@@ -37,7 +43,7 @@ export const InventoryProvider = ({ children }) => {
   async function subtractInventory(data) {
     try {
       const res = await axios.post("/api/inventory/subtract", data);
-      loadInventories();
+      await loadInventories();
     } catch (error) {
       setError(error.response.data.message);
     }
