@@ -17,7 +17,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function loadInventories() {
     try {
-      const res = await axios.get("/api/inventory/detail");
+      const res = await axios.get("/api/stock/detail");
       setInventories(res.data);
     } catch (error) {
       setError(error.response.data.message);
@@ -26,7 +26,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function addInventory(data) {
     try {
-      const res = await axios.post("/api/inventory/add", data);
+      const res = await axios.post("/api/stock/add", data);
       await loadInventories();
     } catch (error) {
       setError(error.response.data.message);
@@ -35,7 +35,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function subtractInventory(data) {
     try {
-      const res = await axios.post("/api/inventory/subtract", data);
+      const res = await axios.post("/api/stock/subtract", data);
       await loadInventories();
     } catch (error) {
       setError(error.response.data.message);
