@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import axios from "@lib/axios";
-import { user } from "@nextui-org/react";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
