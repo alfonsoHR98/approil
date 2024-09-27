@@ -17,12 +17,14 @@ function SaleDetail() {
     fetchData();
   }, [params.id]);
 
-  const totalAmount = sale?.SaleDetail?.reduce(
+  console.log(sale)
+
+  const totalAmount = sale?.SaleDetails?.reduce(
     (sum, detail) => sum + detail.quantity * detail.price,
     0
   );
 
-  const totalAmountWithDiscount = sale?.SaleDetail?.reduce(
+  const totalAmountWithDiscount = sale?.SaleDetails?.reduce(
     (sum, detail) =>
       sum + detail.quantity * detail.price * (1 - detail.discount / 100),
     0
@@ -38,20 +40,20 @@ function SaleDetail() {
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Nombre:</span>{" "}
             {sale?.saleType === "CLIENT"
-              ? sale?.client.name
-              : sale?.warehouse.name}
+              ? sale?.Client.name
+              : sale?.Warehouse.name}
           </p>
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Teléfono:</span>{" "}
             {sale?.saleType === "CLIENT"
-              ? sale?.client.phone
-              : sale?.warehouse.phone}
+              ? sale?.Client.phone
+              : sale?.Warehouse.phone}
           </p>
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Email:</span>{" "}
             {sale?.saleType === "CLIENT"
-              ? sale?.client.email
-              : sale?.warehouse.email}
+              ? sale?.Client.email
+              : sale?.Warehouse.email}
           </p>
         </div>
         <div className="px-4 mt-2">
@@ -70,12 +72,12 @@ function SaleDetail() {
               </tr>
             </thead>
             <tbody>
-              {sale?.SaleDetail?.map((detail) => (
+              {sale?.SaleDetails?.map((detail) => (
                 <tr key={detail.id}>
                   <td className="border px-4 py-2 flex flex-col">
-                    {detail.product.name}{" "}
+                    {detail.Product.name}{" "}
                     <span className="text-xs text-neutral-500">
-                      {detail.product.code}
+                      {detail.Product.code}
                     </span>
                   </td>
                   <td className="border px-4 py-2">{detail.quantity}</td>

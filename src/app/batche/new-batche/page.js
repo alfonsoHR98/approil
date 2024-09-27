@@ -183,7 +183,7 @@ function NewBatche() {
                         <p className="text-sm font-semibold">{item.name}</p>
                         <span className="text-xs flex justify-between gap-2">
                           <p className=" text-gray-500">{item.code}</p>
-                          {item.unit.name}
+                          {item?.SaleUnit?.name}
                         </span>
                       </div>
                     </AutocompleteItem>

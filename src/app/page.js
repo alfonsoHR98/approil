@@ -136,7 +136,7 @@ function HomePage() {
                       <span className="text-gray-700">
                         {i + 1}.- {product.product.name}
                         <pre className="text-xs">
-                          {product.product.code} - {product.product.unit.name}
+                          {product.product.code} - {product.product.SaleUnit.name}
                         </pre>
                       </span>
                       <span className="text-gray-500">{product.quantity}</span>
@@ -160,7 +160,7 @@ function HomePage() {
                       <span className="text-gray-700">
                         {i + 1}.- {product.product.name}
                         <pre className="text-xs">
-                          {product.product.code} - {product.product.unit.name}
+                          {product.product.code} - {product.product.SaleUnit.name}
                         </pre>
                       </span>
                       <span className="text-gray-500">

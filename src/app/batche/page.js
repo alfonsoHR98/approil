@@ -12,7 +12,7 @@ function Batche() {
   }, []);
 
   const calculateTotal = (batche) => {
-    const total = batche.BatcheDetail.reduce((total, detail) => {
+    const total = batche.BatcheDetails.reduce((total, detail) => {
       return total + detail.quantity * detail.price;
     }, 0);
 
@@ -21,6 +21,8 @@ function Batche() {
       currency: "MXN",
     });
   };
+
+  console.log(batches);
 
   return (
     <PageComponent tittle="Compras">
@@ -31,7 +33,7 @@ function Batche() {
             label: "Fecha",
           },
           {
-            key: "supplier.name",
+            key: "Supplier.name",
             label: "Proveedor",
           },
           {

@@ -11,8 +11,9 @@ function Sale() {
     loadSales();
   }, []);
 
+  console.log(sales);
   const calculateTotal = (sale) => {
-    const total = sale.SaleDetail.reduce((total, item) => {
+    const total = sale.SaleDetails.reduce((total, item) => {
       return total + item.quantity * item.price;
     }, 0);
 
@@ -31,7 +32,7 @@ function Sale() {
             label: "Fecha",
           },
           {
-            key: "client.name",
+            key: "Client.name",
             label: "Cliente",
           },
           {

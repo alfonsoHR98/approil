@@ -17,7 +17,8 @@ function BatcheDetail() {
     fetchData();
   }, []);
 
-  const totalAmount = batche?.BatcheDetail?.reduce(
+
+  const totalAmount = batche?.BatcheDetails?.reduce(
     (sum, detail) => sum + detail.quantity * detail.price,
     0
   );
@@ -31,19 +32,19 @@ function BatcheDetail() {
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Nombre:</span>{" "}
             {batche?.supplierType === "SUPPLIER"
-              ? batche?.supplier.name
+              ? batche?.Supplier.name
               : batche?.sup_warehouse.name}
           </p>
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Teléfono:</span>{" "}
             {batche?.supplierType === "SUPPLIER"
-              ? batche?.supplier.phone
+              ? batche?.Supplier.phone
               : batche?.sup_warehouse.phone}
           </p>
           <p className="text-gray-700 mb-2">
             <span className="font-bold">Email:</span>{" "}
             {batche?.supplierType === "SUPPLIER"
-              ? batche?.supplier.email
+              ? batche?.Supplier.email
               : batche?.sup_warehouse.email}
           </p>
         </div>
@@ -62,12 +63,12 @@ function BatcheDetail() {
               </tr>
             </thead>
             <tbody>
-              {batche?.BatcheDetail?.map((detail) => (
+              {batche?.BatcheDetails?.map((detail) => (
                 <tr key={detail.id}>
                   <td className="border px-4 py-2 flex flex-col">
-                    {detail.product.name}{" "}
+                    {detail.Product.name}{" "}
                     <span className="text-xs text-neutral-500">
-                      {detail.product.code}
+                      {detail.Product.code}
                     </span>
                   </td>
                   <td className="border px-4 py-2">{detail.quantity}</td>

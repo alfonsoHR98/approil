@@ -161,7 +161,7 @@ function Product() {
               label: "Código",
             },
             {
-              key: "unit.name",
+              key: "SaleUnit.name",
               label: "Unidad",
             },
             {
