@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import axios from "@lib/axios";
 
 const BatcheContext = createContext();
 
@@ -17,7 +17,7 @@ export const BatcheProvider = ({ children }) => {
 
   const loadBatches = async () => {
     try {
-      const res = await axios.get("/api/batche");
+      const res = await axios.get("/batche");
       setBatches(res.data);
     } catch (err) {
       setError(error.response?.data?.message);
@@ -26,7 +26,7 @@ export const BatcheProvider = ({ children }) => {
 
   async function newBatche(data) {
     try {
-      const res = await axios.post("/api/batche", data);
+      const res = await axios.post("/batche", data);
       loadBatches();
       return res.data;
     } catch (err) {
@@ -36,7 +36,7 @@ export const BatcheProvider = ({ children }) => {
 
   async function removeBatche(id) {
     try {
-      await axios.delete(`/api/batche/${id}`);
+      await axios.delete(`/batche/${id}`);
       loadBatches();
     } catch (err) {
       console.log(err);
@@ -46,7 +46,7 @@ export const BatcheProvider = ({ children }) => {
 
   async function newBatcheDetail(data) {
     try {
-      await axios.post("/api/batcheDetail", data);
+      await axios.post("/batcheDetail", data);
     } catch (err) {
       setError(error.response?.data?.message);
     }
@@ -54,7 +54,7 @@ export const BatcheProvider = ({ children }) => {
 
   async function getBatcheDetail(id) {
     try {
-      const res = await axios.get(`/api/batche/${id}`);
+      const res = await axios.get(`/batche/${id}`);
       return res.data;
     } catch (err) {
       setError(error.response?.data?.message);

@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import db from "@lib/db";
+import axios from "@lib/axios";
+import { user } from "@nextui-org/react";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -11,25 +11,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        const userFound = await db.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
+        const userFound = await axios.post("/login", credentials);
 
-        if (!userFound) throw new Error("Credenciales inválidas");
+        if (userFound.status === 400) throw new Error("Credenciales inválidas");
 
-        const matchPassword = await bcrypt.compare(
-          credentials.password,
-          userFound.password
-        );
-
-        if (!matchPassword) throw new Error("credenciales invalidas");
-
+        const user = userFound.data;
         return {
-          id: userFound.id,
-          name: userFound.name,
-          email: userFound.email,
+          id: user.id,
+          name: user.name,
+          email: user.email,
         };
       },
     }),

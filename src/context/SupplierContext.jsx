@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import axios from "@lib/axios";
 
 const SupplierContext = createContext();
 
@@ -17,7 +17,7 @@ export const SupplierProvider = ({ children }) => {
 
   const loadSuppliers = async () => {
     try {
-      const res = await axios.get("/api/supplier");
+      const res = await axios.get("/supplier");
       setSuppliers(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
@@ -26,7 +26,7 @@ export const SupplierProvider = ({ children }) => {
 
   async function newSupplier(data) {
     try {
-      await axios.post("/api/supplier", data);
+      await axios.post("/supplier", data);
       loadSuppliers();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -35,7 +35,7 @@ export const SupplierProvider = ({ children }) => {
 
   async function removeSupplier(id) {
     try {
-      await axios.delete(`/api/supplier/${id}`);
+      await axios.delete(`/supplier/${id}`);
       loadSuppliers();
     } catch (error) {
       setError(error.response?.data?.message);

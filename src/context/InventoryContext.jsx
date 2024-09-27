@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import axios from "@lib/axios";
 
 const InventoryContext = createContext();
 
@@ -17,7 +17,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function loadInventories() {
     try {
-      const res = await axios.get("/api/stock/detail");
+      const res = await axios.get("/stock/detail");
       setInventories(res.data);
     } catch (error) {
       setError(error.response.data.message);
@@ -26,7 +26,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function addInventory(data) {
     try {
-      const res = await axios.post("/api/stock/add", data);
+      const res = await axios.post("/stock/add", data);
       await loadInventories();
     } catch (error) {
       setError(error.response.data.message);
@@ -35,7 +35,7 @@ export const InventoryProvider = ({ children }) => {
 
   async function subtractInventory(data) {
     try {
-      const res = await axios.post("/api/stock/subtract", data);
+      const res = await axios.post("/stock/subtract", data);
       await loadInventories();
     } catch (error) {
       setError(error.response.data.message);

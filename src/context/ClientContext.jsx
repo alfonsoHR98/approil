@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import axios from "@lib/axios";
 
 const ClientContext = createContext();
 
@@ -17,7 +17,7 @@ export const ClientProvider = ({ children }) => {
 
   const loadClients = async () => {
     try {
-      const res = await axios.get("/api/client");
+      const res = await axios.get("/client");
       setClients(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
@@ -26,7 +26,7 @@ export const ClientProvider = ({ children }) => {
 
   async function newClient(data) {
     try {
-      await axios.post("/api/client", data);
+      await axios.post("/client", data);
       loadClients();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -35,7 +35,7 @@ export const ClientProvider = ({ children }) => {
 
   async function removeClient(id) {
     try {
-      await axios.delete(`/api/client/${id}`);
+      await axios.delete(`/client/${id}`);
       loadClients();
     } catch (error) {
       setError(error.response?.data?.message);

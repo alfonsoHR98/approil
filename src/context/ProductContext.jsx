@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import axios from "@lib/axios";
 
 const ProductContext = createContext();
 
@@ -17,7 +17,8 @@ export const ProductProvider = ({ children }) => {
 
   const loadProducts = async () => {
     try {
-      const res = await axios.get("/api/product");
+      const res = await axios.get("/product");
+      console.log(res);
       setProducts(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
@@ -26,7 +27,7 @@ export const ProductProvider = ({ children }) => {
 
   async function newProduct(data) {
     try {
-      await axios.post("/api/product", data);
+      await axios.post("/product", data);
       loadProducts();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -35,7 +36,7 @@ export const ProductProvider = ({ children }) => {
 
   async function removeProduct(id) {
     try {
-      await axios.delete(`/api/product/${id}`);
+      await axios.delete(`/product/${id}`);
       loadProducts();
     } catch (error) {
       setError(error.response?.data?.message);

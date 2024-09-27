@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import axios from "@lib/axios";
 
 const SaleContext = createContext();
 
@@ -17,7 +17,7 @@ export const SaleProvider = ({ children }) => {
 
   const loadSales = async () => {
     try {
-      const res = await axios.get("/api/sale");
+      const res = await axios.get("/sale");
       setSales(res.data);
     } catch (error) {
       setError(error.response?.data?.message);
@@ -26,7 +26,7 @@ export const SaleProvider = ({ children }) => {
 
   async function newSale(data) {
     try {
-      const res = await axios.post("/api/sale", data);
+      const res = await axios.post("/sale", data);
       loadSales();
       return res.data;
     } catch (error) {
@@ -36,7 +36,7 @@ export const SaleProvider = ({ children }) => {
 
   async function removeSale(id) {
     try {
-      await axios.delete(`/api/sale/${id}`);
+      await axios.delete(`/sale/${id}`);
       loadSales();
     } catch (error) {
       setError(error.response?.data?.message);
@@ -45,7 +45,7 @@ export const SaleProvider = ({ children }) => {
 
   async function newSaleDetail(data) {
     try {
-      await axios.post("/api/saleDetail", data);
+      await axios.post("/saleDetail", data);
     } catch (error) {
       setError(error.response?.data?.message);
     }
@@ -53,7 +53,7 @@ export const SaleProvider = ({ children }) => {
 
   async function getSaleDetail(id) {
     try {
-      const res = await axios.get(`/api/sale/${id}`);
+      const res = await axios.get(`/sale/${id}`);
       return res.data;
     } catch (error) {
       setError(error.response?.data?.message);

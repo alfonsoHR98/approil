@@ -79,7 +79,7 @@ function TableComponent({
     setSearchTerm(event.target.value);
   };
 
-  const filteredData = data.filter((item) =>
+  const filteredData = data?.filter((item) =>
     columns.some((column) =>
       (getNestedValue(item, column.key) ?? "")
         .toString()
